@@ -10,9 +10,9 @@ stream = audio.open(format=pa.paFloat32,
                     input=True,
                     frames_per_buffer=1024)
 
-shout = 80
+shout = -0
 
-output_file = wv.open('captured_sound.wav', 'wb')
+output_file = wv.open('test.wav', 'wb')
 output_file.setnchannels(1)
 output_file.setsampwidth(audio.get_sample_size(pa.paFloat32))
 output_file.setframerate(44100)
@@ -22,13 +22,13 @@ while True:
     audio_data = np.frombuffer(data, dtype=np.float32)
 
     rms = np.sqrt(np.mean(audio_data**2))
-
+    print("RMS:", rms)
     decibels = 20 * np.log10(rms)
     print("Decibels: ", decibels)
 
     output_file.writeframes(data)
 
-    if decibels > shout or output_file.tell() > 44100 * 5:
+    if decibels > shout or output_file.tell() > 44100 * 2:
         output_file.close()
         stream.close()
         audio.terminate()
